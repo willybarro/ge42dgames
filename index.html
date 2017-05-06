@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+  <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  crossorigin="anonymous"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
+  <script src="index.js"></script>
+  <style type="text/css">
+    .ui.container > h1 {
+      font-size: 3em;
+      text-align: center;
+      font-weight: normal;
+      padding: 30px 20px;
+      margin: 0;
+    }
+
+    #question-card .content {
+      font-size: 1.5em;
+      /*min-height: 300px;*/
+    }
+
+    .ui.card .content img.logo {
+      display: block;
+    }
+
+    .ui.card.hide, .ui.card .hide {
+      display: none!important;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui container">
+    <h1>Qual é a melhor game engine pro meu projeto de jogo de plataforma 2D/2.5D?</h1>
+    <div class="ui two cards centered">
+      <div id="question-card" class="ui card">
+        <div id="progress" class="ui progress attached" data-show-activity="false">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+        </div>
+        <div class="content">
+        </div>
+        <div class="ui two bottom attached buttons">
+          <div id="btn_no" class="ui button olive large">
+            Não
+          </div>
+          <div id="btn_yes" class="ui button teal large">
+            Sim
+          </div>
+        </div>
+      </div>
+      <div id="finish-card" class="ui card hide">
+        <div class="content">
+          <div>
+              Baseado nas suas respostas, a melhor opção para seu projeto é:
+                <div>
+                  <a href="https://unity3d.com/">
+                    <img class="ui centered logo image" src="images/unity_logo.png" alt="Unity" />
+                  </a>
+                  <a href="https://www.unrealengine.com/what-is-unreal-engine-4">
+                    <img class="ui centered image logo hide" src="images/unreal_logo.png" alt="Unreal" />
+                  </a>
+                </div>
+              </div>
+          Quer saber mais sobre o processo de decisão?<br />
+          Esse programa é produto de uma pesquisa feita em uma tese de bacharelado em Ciências da Computação, se quiser saber mais <a href="#">clique aqui</a>.
+        </div>
+        <div class="ui two bottom attached buttons">
+          <div id="btn_reset" class="ui button teal large">
+            Reiniciar
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
