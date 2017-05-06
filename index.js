@@ -45,18 +45,108 @@ categorias[DEPURADOR] = {
   nota_unity: 10
 };
 
+// Method for future translation, if needed.
+var _t = function(ptbr, enus) {
+  return ptbr;
+}
+
 var originalQuestions = [
+  // Qualidade Doc
   {
     category: QUALIDADE_DOC,
-    title: "Você é iniciante com desenvolvimento de jogos?"
+    title: _t("Você é iniciante em desenvolvimento?")
+  },
+  {
+    category: QUALIDADE_DOC,
+    title: _t("Você é iniciante em desenvolvimento de jogos?")
+  },
+  {
+    category: QUALIDADE_DOC,
+    title: _t("Você precisa de certificações para os membros da sua equipe?")
+  },
+
+  // Suporte Multiplatvocê
+  {
+    category: SUPORTE_MULTIPLAT,
+    title: _t("Você pretende distribuir seu jogo em plataformas além das principais (PC, Sony, Microsoft)?")
   },
   {
     category: SUPORTE_MULTIPLAT,
-    title: "Você sabe a diferença entre licenciamento e royalties?"
+    title: _t("Usuários de plataformas móveis são o principal público-alvo do seu projeto?")
+  },
+  {
+    category: SUPORTE_MULTIPLAT,
+    title: _t("Seu projeto precisa suporte a Smart TV?")
+  },
+
+  // Suporte Sprite
+  {
+    category: SUPORTE_SPRITE,
+    title: _t("Seu projeto será completamente 2D?")
+  },
+  {
+    category: SUPORTE_SPRITE,
+    title: _t("Você pretende fazer animações quadro-a-quadro?")
+  },
+  {
+    category: SUPORTE_SPRITE,
+    title: _t("Suas animações serão feitas em um programa externo?")
+  },
+
+  // Colisão
+  {
+    category: COLISAO,
+    title: _t('Você pretende usar efeitos de física de área? Ex: forte vento empurrando objetos pelo cenário')
+  },
+  {
+    category: COLISAO,
+    title: _t("Você pretende simular objetos complexos como correntes e tecidos?")
+  },
+  {
+    category: COLISAO,
+    title: _t('Seu jogo é baseado em física como <a href="https://www.angrybirds.com/">Angry Birds</a>, <a href="https://kerbalspaceprogram.com/">Kerbal Space Program</a> e <a href="https://www.cuttherope.net/">Cut The Rope</a>?')
+  },
+
+  // Licenciamento e Royalties
+  {
+    category: LICENCIAMENTO_ROYALTIES,
+    title: _t("Você pretende investir mais de 12 meses no desenvolvimento desse projeto?")
   },
   {
     category: LICENCIAMENTO_ROYALTIES,
-    title: "Seu jogo demorará mais de 12 meses para ficar pronto?"
+    title: _t("Você sabe a diferença entre licenciamento e royalties?")
+  },
+  {
+    category: LICENCIAMENTO_ROYALTIES,
+    title: _t("Você prevê mais de US$ 100 mil anuais de receita bruta apenas com esse projeto?")
+  },
+
+  // Linguagens suportadas
+  {
+    category: LINGUAGENS_SUPORTADAS,
+    title: _t("Você já desenvolveu algum jogo em C++?")
+  },
+  {
+    category: LINGUAGENS_SUPORTADAS,
+    title: _t("Você tem interesse em programação visual?")
+  },
+  {
+    category: LINGUAGENS_SUPORTADAS,
+    title: _t("Você pretende usar linguagens de shading?")
+  },
+
+  // Depurador e profiling
+  {
+    category: DEPURADOR,
+    title: _t("Você precisa de acesso ao código fonte da engine?")
+  },
+  {
+    category: DEPURADOR,
+    title: _t("Você faz questão de usar uma IDE específica, como o Visual Studio?")
+  },
+  {
+    category: DEPURADOR,
+    title: _t("Você precisa de métricas de performance de baixo nível?")
   }
 ];
 
@@ -66,9 +156,10 @@ var survey = {
   currentQuestionIndex: -1,
   init: function(questions) {
     // Shuffle questions
-    survey.questions = questions;
-    shuffle(survey.questions);
-
+    if (questions) {
+      survey.questions = questions;
+    }
+    
     // Initiate DOM elements
     $('#btn_yes').on('click', survey.yes);
     $('#btn_no').on('click', survey.no);
@@ -79,21 +170,37 @@ var survey = {
       text: false
     });
 
-    // Load the first question    
+    // Load the first question
+    survey.loadFirstQuestion();
+  },
+  loadFirstQuestion: function() {
+    survey.currentQuestionIndex = -1;
+    survey.answers = [];
+
+    $('#progress').progress('reset');
+    shuffle(survey.questions);  
     survey.loadNextQuestion();
   },
   reset: function() {
     $('#finish-card').addClass('hide');
     $('#question-card').removeClass('hide');
 
-    survey.init();
+    survey.loadFirstQuestion();
   },
   finish: function() {
+    var winner = survey.getWinner();
+
     $('#finish-card').removeClass('hide');
     $('#question-card').addClass('hide');
 
-    $('#finish-container .logo').removeClass('hide');
-    $('#finish-container .unreal').addClass('hide');
+    $('#finish-card .logo').addClass('hide');
+    $('#finish-card .logo.' + winner).removeClass('hide');
+  },
+  getWinner: function() {
+    // Calcula a porcentagem de relevância por critério
+
+
+    return 'unity';
   },
   yes: function() {
     survey.answers[survey.currentQuestionIndex] = 1;
@@ -115,7 +222,7 @@ var survey = {
   },
   loadQuestion: function() {
     question = survey.getQuestion(survey.currentQuestionIndex);
-    $('.question .content').html(question.title);
+    $('#question-card .content').html(question.title);
   },
   getQuestion: function(num) {
     return survey.questions[num];
