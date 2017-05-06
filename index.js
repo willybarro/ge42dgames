@@ -5,7 +5,7 @@ var
   COLISAO = "colisao",
   LICENCIAMENTO_ROYALTIES = "licenciamentoRoyalties",
   LINGUAGENS_SUPORTADAS = "linguagensSuportadas"
-  DEPURADOR = 7
+  DEPURADOR = "depurador"
 ;
 
 var categorias = {};
@@ -76,7 +76,7 @@ var originalQuestions = [
   },
   {
     category: SUPORTE_MULTIPLAT,
-    title: _t("Seu projeto precisa suporte a Smart TV?")
+    title: _t("Seu projeto precisa de suporte a Smart TVs?")
   },
 
   // Suporte Sprite
@@ -96,7 +96,7 @@ var originalQuestions = [
   // Colisão
   {
     category: COLISAO,
-    title: _t('Você pretende usar efeitos de física de área? Ex: forte vento empurrando objetos pelo cenário')
+    title: _t('Você pretende usar efeitos de física de área? Ex.: Forte vento empurrando objetos pelo cenário')
   },
   {
     category: COLISAO,
@@ -104,7 +104,7 @@ var originalQuestions = [
   },
   {
     category: COLISAO,
-    title: _t('Seu jogo é baseado em física como <a href="https://www.angrybirds.com/">Angry Birds</a>, <a href="https://kerbalspaceprogram.com/">Kerbal Space Program</a> e <a href="https://www.cuttherope.net/">Cut The Rope</a>?')
+    title: _t('Seu jogo é baseado em física? Ex.: <a href="https://www.angrybirds.com/">Angry Birds</a>, <a href="https://kerbalspaceprogram.com/">Kerbal Space Program</a> ou <a href="https://www.cuttherope.net/">Cut The Rope</a>.')
   },
 
   // Licenciamento e Royalties
@@ -142,11 +142,11 @@ var originalQuestions = [
   },
   {
     category: DEPURADOR,
-    title: _t("Você faz questão de usar uma IDE específica, como o Visual Studio?")
+    title: _t("Você faz questão de usar sua IDE favorita? Ex.: Visual Studio.")
   },
   {
     category: DEPURADOR,
-    title: _t("Você precisa de métricas de performance de baixo nível?")
+    title: _t("Você precisa de métricas de performance de baixo nível? Ex.:")
   }
 ];
 
@@ -188,6 +188,9 @@ var survey = {
     survey.loadFirstQuestion();
   },
   finish: function() {
+    // Aplica a recomendação de capitulos
+    $('#recommendation_chapters').html(survey.getChapterRecommendationText());
+
     var winner = survey.getWinner();
 
     $('#finish-card').removeClass('hide');
@@ -198,9 +201,39 @@ var survey = {
   },
   getWinner: function() {
     // Calcula a porcentagem de relevância por critério
+    survey.getCategoryRelevance();
 
 
     return 'unity';
+  },
+  getCategoryRelevance: function() {
+    var relevanceArr = {};
+    for (i in survey.questions) {
+      var currentCategory = survey.questions[i].category;
+
+      if (!relevanceArr[currentCategory]) {
+        relevanceArr[currentCategory] = {relevance: 0};
+      }
+
+      // Se a questão teve resposta positiva, adiciona relevância.
+      if (survey.answers[i]) {
+        relevanceArr[currentCategory].relevance += 1;
+      }
+    }
+
+    return relevanceArr;
+  },
+  getChapterRecommendationText: function() {
+    var relevanceArr = this.getCategoryRelevance();
+    var categoryNames = [];
+    for (i in relevanceArr) {
+      // Só mostramos o que tiver mais de 1 de relevância, senão vai aparecer muitos capitulos
+      if (relevanceArr[i].relevance > 1) {
+        categoryNames.push(categorias[i].nome);
+      }
+    }
+
+    return categoryNames.join(', ');
   },
   yes: function() {
     survey.answers[survey.currentQuestionIndex] = 1;
@@ -222,7 +255,7 @@ var survey = {
   },
   loadQuestion: function() {
     question = survey.getQuestion(survey.currentQuestionIndex);
-    $('#question-card .content').html(question.title);
+    $('#question-card .content').html(question.category + ": " + question.title);
   },
   getQuestion: function(num) {
     return survey.questions[num];
