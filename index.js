@@ -50,6 +50,11 @@ var _t = function(ptbr, enus) {
   return ptbr;
 }
 
+// Questões
+var
+  NUMERO_DE_QUESTOES_POR_CATEGORIA = 3,
+  RELEVANCIA_MAXIMA = 5
+;
 var originalQuestions = [
   // Qualidade Doc
   {
@@ -154,6 +159,7 @@ var survey = {
   answers: [],
   questions: [],
   currentQuestionIndex: -1,
+  isInFreeMode: false,
   init: function(questions) {
     // Shuffle questions
     if (questions) {
@@ -172,11 +178,16 @@ var survey = {
       total: survey.questions.length+1,
       text: false
     });
+    $('#freemode_categories').on('change', 'input', function() {
+      $(this).parent().find('.range_val_label').html($(this).val());
+    })
 
     // Load the first question
     survey.loadFirstQuestion();
   },
   freeMode: function() {
+    survey.isInFreeMode = true;
+
     $('#goto_questionmode').removeClass('hide');
     $('#goto_freemode').addClass('hide');
 
@@ -186,8 +197,10 @@ var survey = {
     // Monta a tabela
     var tb = '';
     for (i in categorias) {
-      tb += '<tr><td>' + categorias[i].nome + '</td>';
-      tb += '<td>1 <input type="range" name="dubs[' + i+ ']" min="1" max="5"> 5</td></tr>';
+      tb += '<tr>';
+      tb += '<td style="width: 50%">' + categorias[i].nome + '</td>';
+      tb += '<td><input class="small range_val_input" type="range" name="' + i+ '" min="1" max="5" value="3" step="0.1"> <span class="range_val_label">3</span></td>';
+      tb += '</tr>';
     }
     $('#freemode_categories tbody').html(tb);
   },
@@ -203,6 +216,8 @@ var survey = {
     survey.loadNextQuestion();
   },
   reset: function() {
+    survey.isInFreeMode = false;
+
     $('#goto_questionmode').addClass('hide');
     $('#goto_freemode').removeClass('hide');
 
@@ -227,29 +242,32 @@ var survey = {
     $('#finish-card .logo.' + winner).removeClass('hide');
   },
   getWinner: function() {
-    // Pega a relevancia baseada no questionario
-    survey.getCategoryRelevance();
-
-    // Pega a relevancia baseada no free mode
-
-    // Calcula e sugere
-
-
+    // Pega a relevancia
+    console.log(survey.getCategoryRelevance());
 
     return 'unity';
   },
   getCategoryRelevance: function() {
     var relevanceArr = {};
-    for (i in survey.questions) {
-      var currentCategory = survey.questions[i].category;
 
-      if (!relevanceArr[currentCategory]) {
-        relevanceArr[currentCategory] = {relevance: 0};
-      }
+    // Se estiver em free mode
+    if (survey.isInFreeMode) {
+      $('.range_val_input').each(function() {
+        relevanceArr[$(this).attr('name')] = {relevance: $(this).val()};
+      });
+    } else {
+      // Se estiver no modo questinário
+      for (i in survey.questions) {
+        var currentCategory = survey.questions[i].category;
+        if (!relevanceArr[currentCategory]) {
+          relevanceArr[currentCategory] = {relevance: 0};
+        }
 
-      // Se a questão teve resposta positiva, adiciona relevância.
-      if (survey.answers[i]) {
-        relevanceArr[currentCategory].relevance += 1;
+        // Se a questão teve resposta positiva, adiciona relevância.
+        if (survey.answers[i]) {
+          // Normaliza a relevância e adiciona à categoria
+          relevanceArr[currentCategory].relevance += (1 * RELEVANCIA_MAXIMA) / NUMERO_DE_QUESTOES_POR_CATEGORIA;
+        }
       }
     }
 
@@ -259,8 +277,8 @@ var survey = {
     var relevanceArr = this.getCategoryRelevance();
     var categoryNames = [];
     for (i in relevanceArr) {
-      // Só mostramos o que tiver mais de 1 de relevância, senão vai aparecer muitos capitulos
-      if (relevanceArr[i].relevance > 1) {
+      // Só mostramos o que tiver mais de 3 de 5 relevância, senão vai aparecer muitos capitulos
+      if (relevanceArr[i].relevance > 3) {
         categoryNames.push(categorias[i].nome);
       }
     }
