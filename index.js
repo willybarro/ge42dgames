@@ -151,7 +151,7 @@ var originalQuestions = [
   },
   {
     category: DEPURADOR,
-    title: _t("Você precisa de métricas de performance de baixo nível? Ex.:")
+    title: _t("Você precisa de métricas de performance de baixíssimo nível?")
   }
 ];
 
@@ -193,13 +193,14 @@ var survey = {
 
     $('#question-card').addClass('hide');
     $('#free-card').removeClass('hide');
+    $('#finish-card').addClass('hide');
 
     // Monta a tabela
     var tb = '';
     for (i in categorias) {
       tb += '<tr>';
       tb += '<td style="width: 50%">' + categorias[i].nome + '</td>';
-      tb += '<td><input class="small range_val_input" type="input" name="' + i+ '" min="1" max="5" value="3" step="0.1"> <span class="range_val_label">3</span></td>';
+      tb += '<td><input class="small range_val_input" type="range" name="' + i+ '" min="1" max="5" value="3" step="0.1"> <span class="range_val_label">3</span></td>';
       tb += '</tr>';
     }
     $('#freemode_categories tbody').html(tb);
@@ -317,7 +318,7 @@ var survey = {
   },
   loadQuestion: function() {
     question = survey.getQuestion(survey.currentQuestionIndex);
-    $('#question-card .content').html(question.category + ": " + question.title);
+    $('#question-card .content').html('<div class="ui top right attached label">' + categorias[question.category].nome + '</div>' + question.title);
   },
   getQuestion: function(num) {
     return survey.questions[num];
