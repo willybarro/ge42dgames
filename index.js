@@ -31,8 +31,8 @@ categorias[COLISAO] = {
 };
 categorias[LICENCIAMENTO_ROYALTIES] = {
   nome: "Licenciamento e Royalties",
-  nota_unreal: 1,
-  nota_unity: 1
+  nota_unreal: 0,
+  nota_unity: 0
 };
 categorias[LINGUAGENS_SUPORTADAS] = {
   nome: "Linguagens suportadas",
@@ -199,7 +199,7 @@ var survey = {
     for (i in categorias) {
       tb += '<tr>';
       tb += '<td style="width: 50%">' + categorias[i].nome + '</td>';
-      tb += '<td><input class="small range_val_input" type="range" name="' + i+ '" min="1" max="5" value="3" step="0.1"> <span class="range_val_label">3</span></td>';
+      tb += '<td><input class="small range_val_input" type="input" name="' + i+ '" min="1" max="5" value="3" step="0.1"> <span class="range_val_label">3</span></td>';
       tb += '</tr>';
     }
     $('#freemode_categories tbody').html(tb);
@@ -243,9 +243,21 @@ var survey = {
   },
   getWinner: function() {
     // Pega a relevancia
-    console.log(survey.getCategoryRelevance());
+    var relevanceArr = survey.getCategoryRelevance();
+    var sumUnity = 0;
+    var sumUnreal = 0;
+    for (i in relevanceArr) {
+      sumUnreal += relevanceArr[i].relevance * categorias[i].nota_unreal;
+      sumUnity += relevanceArr[i].relevance * categorias[i].nota_unity;
+    }
 
-    return 'unity';
+    // Define o vencedor
+    var unrealUnityRatio = (sumUnreal/sumUnity);
+    if (unrealUnityRatio > 1) {
+      return 'unreal';
+    } else {
+      return 'unity';
+    }
   },
   getCategoryRelevance: function() {
     var relevanceArr = {};
