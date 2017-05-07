@@ -11,38 +11,38 @@ var
 var categorias = {};
 categorias[QUALIDADE_DOC] = {
   nome: "Qualidade da documentação disponível",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 3.0,
+  nota_unity: 4.5
 };
 categorias[SUPORTE_MULTIPLAT] = {
   nome: "Suporte a múltiplas plataformas",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 4.0,
+  nota_unity: 4.3
 };
 categorias[SUPORTE_SPRITE] = {
   nome: "Suporte a sprites",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 3.0,
+  nota_unity: 4.5
 };
 categorias[COLISAO] = {
   nome: "Detecção de colisão",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 3.7,
+  nota_unity: 4.4
 };
 categorias[LICENCIAMENTO_ROYALTIES] = {
   nome: "Licenciamento e Royalties",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 1,
+  nota_unity: 1
 };
 categorias[LINGUAGENS_SUPORTADAS] = {
   nome: "Linguagens suportadas",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 4.7,
+  nota_unity: 4.2
 };
 categorias[DEPURADOR] = {
   nome: "Depurador e Ferramentas de profiling",
-  nota_unreal: 10,
-  nota_unity: 10
+  nota_unreal: 4.8,
+  nota_unity: 3.9
 };
 
 // Method for future translation, if needed.
@@ -164,6 +164,9 @@ var survey = {
     $('#btn_yes').on('click', survey.yes);
     $('#btn_no').on('click', survey.no);
     $('#btn_reset').on('click', survey.reset);
+    $('#goto_freemode').on('click', survey.freeMode);
+    $('#goto_questionmode').on('click', survey.questionMode);
+    $('#btn_calcfreemode').on('click', survey.finish);
     $('#progress').progress({
       showActivity: false,
       total: survey.questions.length+1,
@@ -172,6 +175,24 @@ var survey = {
 
     // Load the first question
     survey.loadFirstQuestion();
+  },
+  freeMode: function() {
+    $('#goto_questionmode').removeClass('hide');
+    $('#goto_freemode').addClass('hide');
+
+    $('#question-card').addClass('hide');
+    $('#free-card').removeClass('hide');
+
+    // Monta a tabela
+    var tb = '';
+    for (i in categorias) {
+      tb += '<tr><td>' + categorias[i].nome + '</td>';
+      tb += '<td>1 <input type="range" name="dubs[' + i+ ']" min="1" max="5"> 5</td></tr>';
+    }
+    $('#freemode_categories tbody').html(tb);
+  },
+  questionMode: function() {
+    survey.reset();
   },
   loadFirstQuestion: function() {
     survey.currentQuestionIndex = -1;
@@ -182,8 +203,13 @@ var survey = {
     survey.loadNextQuestion();
   },
   reset: function() {
+    $('#goto_questionmode').addClass('hide');
+    $('#goto_freemode').removeClass('hide');
+
     $('#finish-card').addClass('hide');
     $('#question-card').removeClass('hide');
+
+    $('#free-card').addClass('hide');
 
     survey.loadFirstQuestion();
   },
@@ -195,13 +221,19 @@ var survey = {
 
     $('#finish-card').removeClass('hide');
     $('#question-card').addClass('hide');
+    $('#free-card').addClass('hide');
 
     $('#finish-card .logo').addClass('hide');
     $('#finish-card .logo.' + winner).removeClass('hide');
   },
   getWinner: function() {
-    // Calcula a porcentagem de relevância por critério
+    // Pega a relevancia baseada no questionario
     survey.getCategoryRelevance();
+
+    // Pega a relevancia baseada no free mode
+
+    // Calcula e sugere
+
 
 
     return 'unity';

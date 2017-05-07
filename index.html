@@ -9,11 +9,19 @@
   <script src="semantic/dist/semantic.min.js"></script>
   <script src="index.js"></script>
   <style type="text/css">
+    .bd {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .ui.container {
+      flex: 1;
+    }
     .ui.container > h1 {
       font-size: 3em;
       text-align: center;
       font-weight: normal;
-      padding: 30px 20px;
+      padding-bottom: 20px;
       margin: 0;
     }
 
@@ -26,15 +34,18 @@
       display: block;
     }
 
-    .ui.card.hide, .ui.card .hide {
-      display: none!important;
+    .ui.card.hide, .ui.card .hide, .hide {
+      display: none !important;
+    }
+    .footer .row {
+      padding: 0 !important;
     }
   </style>
 </head>
-<body>
+<body class="bd">
   <div class="ui container">
     <h1>Qual é a melhor game engine pro meu projeto de jogo de plataforma 2D/2.5D?</h1>
-    <div class="ui one cards centered">
+    <div class="ui one cards">
       <div id="question-card" class="ui card">
         <div id="progress" class="ui progress attached" data-show-activity="false">
           <div class="bar">
@@ -52,6 +63,31 @@
           </div>
         </div>
       </div>
+      <div id="free-card" class="ui card hide">
+        <div class="content">
+          <h2>Escolha a relevância para cada um dos critérios abaixo:</h2>
+
+          <form class="ui form">
+            <table id="freemode_categories" class="ui very basic celled table">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Relevância</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </form>
+
+        </div>
+        <div class="ui two bottom attached buttons">
+          <div id="btn_calcfreemode" class="ui button olive large">
+            Calcular
+          </div>
+        </div>
+      </div>
       <div id="finish-card" class="ui card hide">
         <div class="content" style="text-align: center">
           <p>Baseado nas suas respostas, a melhor opção para seu projeto é:</p>
@@ -64,9 +100,10 @@
             </a>
           </div>
           <p>
-            Essa resposta e esse sistema, são produtos de <a href="#">nossa monografia</a><br />de bacharelado em Ciências da Computação.<br /><br />
+            Para uma explicação detalhada dos critérios e fórmulas utilizadas,<br />
+            leia a monografia dos autores <a href="# ">clicando aqui</a>.<br /><br />
             Também baseado nas suas respostas, recomendamos a leitura dos capítulos:<br />
-            <span id="recommendation_chapters">A, B, C e D</span>.
+            <span id="recommendation_chapters"></span>.
           </p>
         </div>
         <div class="ui two bottom attached buttons">
@@ -75,8 +112,23 @@
           </div>
         </div>
       </div>
+      <p id="mode_select">
+        <a href="#" id="goto_freemode" class="ui button">Ir para o modo livre</a>
+        <a href="#" id="goto_questionmode" class="ui button hide">Ir para o modo questionário</a>
+      </p>
     </div>
   </div>
-
+  <div class="ui inverted vertical footer segment">
+    <div class="ui container grid inverted link list">
+      <div class="wide row">
+        <p>
+          Parte da monografia de bacharelado em Ciências da Computação de
+          <a href="https://www.linkedin.com/in/willybarro/" class="item">Willy B. Raffel</a> e
+          <a href="https://www.linkedin.com/in/taisguimaraes/" class="item">Taís G. Lima</a>.
+          Para ler o documento completo, <a href="#" class="item">clique aqui</a>.
+        </p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
