@@ -245,8 +245,8 @@ var survey = {
   getWinner: function() {
     // Pega a relevancia
     var relevanceArr = survey.getCategoryRelevance();
-    var sumUnity = 0;
     var sumUnreal = 0;
+    var sumUnity = 0;
     for (i in relevanceArr) {
       sumUnreal += relevanceArr[i].relevance * categorias[i].nota_unreal;
       sumUnity += relevanceArr[i].relevance * categorias[i].nota_unity;
@@ -254,7 +254,7 @@ var survey = {
 
     // Define o vencedor
     var unrealUnityRatio = (sumUnreal/sumUnity);
-    if (unrealUnityRatio > 1) {
+    if (unrealUnityRatio >= 1) {
       return 'unreal';
     } else {
       return 'unity';
